@@ -3,13 +3,6 @@
 GREEN="\033[1;32m"
 RESET="\033[0m"
 
-echo -e "${GREEN}"
-echo "################################################################################################"
-echo "#                                        HAMID TOR                                             #"
-echo "################################################################################################"
-echo -e "${RESET}"
-
-# torrc file with vanilla bridges
 cat > torrc.hamid <<EOF
 SocksPort 1080
 UseBridges 1
@@ -39,13 +32,20 @@ Bridge 89.58.38.180:5311 232A2B8709F3D1D2998F199640141934FD020512
 Bridge 121.127.33.34:443 19BFCD8AD90626A7B5293B9914ACC203C48A111A
 EOF
 
-echo "Starting Tor..."
-tor -f torrc.hamid &
-sleep 5
+tor -f torrc.hamid | while read line; do
+    if echo "$line" | grep -q "Bootstrapped"; then
+        PERCENT=$(echo "$line" | sed -n 's/.*Bootstrapped \([0-9]\+\)%.*/\1/p')
+        if [ ! -z "$PERCENT" ]; then
+            echo "Progress: $PERCENT%"
+        fi
+    fi
 
-echo -e "${GREEN}"
-echo "################################################################################################"
-echo "#                               HAMID PROXY CONNECTED                                          #"
-echo "################################################################################################"
-echo -e "${RESET}"
-echo "SOCKS proxy is live on port 1080"
+    if echo "$line" | grep -q "Bootstrapped 100%"; then
+        echo -e "${GREEN}"
+        echo "##############################################"
+        echo "#          HAMID PROXY CONNECTED             #"
+        echo "##############################################"
+        echo -e "${RESET}"
+        break
+    fi
+done
