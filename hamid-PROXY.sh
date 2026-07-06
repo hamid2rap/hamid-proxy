@@ -40,7 +40,7 @@ tor -f torrc.hamid | while read line; do
         fi
     fi
 
-    if echo "$line" | grep -q "Bootstrapped 100%"; then
+    if echo "$line" | grep -q "Bootstrapped 100% (done)"; then
         echo -e "${GREEN}"
         echo "##############################################"
         echo "#          HAMID PROXY CONNECTED             #"
