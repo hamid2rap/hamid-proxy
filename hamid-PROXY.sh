@@ -56,6 +56,8 @@ else
     exit 1
 fi
 
+echo "Connecting… please wait (obfs4 may take longer)"
+
 tor -f torrc.hamid | while read line; do
     if echo "$line" | grep -q "Bootstrapped"; then
         PERCENT=$(echo "$line" | sed -n 's/.*Bootstrapped \([0-9]\+\)%.*/\1/p')
