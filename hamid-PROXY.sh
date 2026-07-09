@@ -8,10 +8,10 @@ echo -e "${ORANGE}1) hamid1${RESET}"
 echo -e "${GREEN}2) hamid2${RESET}"
 read -p "Enter option number: " CHOICE
 
-# Check obfs4proxy
 OBFS4_PATH=$(which obfs4proxy 2>/dev/null)
 
 if [ "$CHOICE" = "1" ]; then
+    echo -e "${ORANGE}Using hamid1 (vanilla bridges)...${RESET}"
 
 cat > torrc.hamid <<EOF
 SocksPort 1080
@@ -43,6 +43,7 @@ Bridge 121.127.33.34:443 19BFCD8AD90626A7B5293B9914ACC203C48A111A
 EOF
 
 elif [ "$CHOICE" = "2" ]; then
+    echo -e "${GREEN}Using hamid2 (obfs4 bridges)...${RESET}"
 
 if [ -z "$OBFS4_PATH" ]; then
     echo "ERROR: obfs4proxy is NOT installed!"
@@ -56,7 +57,7 @@ UseBridges 1
 ClientTransportPlugin obfs4 exec $OBFS4_PATH
 
 Bridge obfs4 185.177.207.10:56389 6B84EEA5CE85F8CA28102B0134851F0928921EC2 cert=p9L6+25s8bnfkye1ZxFeAE4mAGY7DH4Gaj7dxngIIzP9BtqrHHwZXdjMK0RVIQ34C7aqZw iat-mode=2
-Bridge obfs4 129.152.27.111:8443 D7D36B82E37D7B6D87C0F1B41CB87378D405BA88 cert=xarwH/CBVJdudEdjvdgVoza4CmEFz1woouIFZCx23grLVHxDmLLJtZxHkinoI7IvYXyKOw iat-mode=0
+Bridge obfs4 129.152.27.111:8443 D7D36B82E37D7B6D87C0F1B41CB87378D405BA88 cert=xarwH/CBVJdudEdjvdgVoza4CmEFZCx23grLVHxDmLLJtZxHkinoI7IvYXyKOw iat-mode=0
 Bridge obfs4 185.177.207.128:8443 1C449CEA7CE065BB8C16F766A05382105B8957A7 cert=XUJTh1xeWKVmcj3Zk6sQOjhOe4bTl4+aUcWuokbz3twSrasAN0zd8zBmHr9A0mBEWXGZPQ iat-mode=0
 Bridge obfs4 109.202.219.164:47111 8EBD640CBC81B1AFB1E41921D376505C29E57A06 cert=nucr4/4B1W2UfTQK5bX/dqAKRcRD6UuEjvLNxlblk52owLbZNgSP0RTi869BdYPg5dzyLQ iat-mode=0
 EOF
@@ -66,7 +67,7 @@ else
     exit 1
 fi
 
-echo "Connecting… please wait (obfs4 may take 20–40 seconds)"
+echo "Starting Tor..."
 
 tor -f torrc.hamid | while read line; do
     if echo "$line" | grep -q "Bootstrapped"; then
