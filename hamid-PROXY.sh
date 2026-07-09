@@ -3,6 +3,13 @@
 GREEN="\033[1;32m"
 RESET="\033[0m"
 
+echo "Select connection mode:"
+echo "1) hamid1"
+echo "2) hamid2"
+read -p "Enter option number: " CHOICE
+
+if [ "$CHOICE" = "1" ]; then
+
 cat > torrc.hamid <<EOF
 SocksPort 1080
 UseBridges 1
@@ -30,12 +37,24 @@ Bridge 213.199.35.150:993 503868C118AB3582C643D6D0DEC0044254DAE0AC
 Bridge 51.254.100.93:443 235A622631D1FD3641CF8CCFB4E2E528F1D3CB43
 Bridge 89.58.38.180:5311 232A2B8709F3D1D2998F199640141934FD020512
 Bridge 121.127.33.34:443 19BFCD8AD90626A7B5293B9914ACC203C48A111A
+EOF
+
+elif [ "$CHOICE" = "2" ]; then
+
+cat > torrc.hamid <<EOF
+SocksPort 1080
+UseBridges 1
 
 Bridge obfs4 185.177.207.10:56389 6B84EEA5CE85F8CA28102B0134851F0928921EC2 cert=p9L6+25s8bnfkye1ZxFeAE4mAGY7DH4Gaj7dxngIIzP9BtqrHHwZXdjMK0RVIQ34C7aqZw iat-mode=2
 Bridge obfs4 129.152.27.111:8443 D7D36B82E37D7B6D87C0F1B41CB87378D405BA88 cert=xarwH/CBVJdudEdjvdgVoza4CmEFz1woouIFZCx23grLVHxDmLLJtZxHkinoI7IvYXyKOw iat-mode=0
 Bridge obfs4 185.177.207.128:8443 1C449CEA7CE065BB8C16F766A05382105B8957A7 cert=XUJTh1xeWKVmcj3Zk6sQOjhOe4bTl4+aUcWuokbz3twSrasAN0zd8zBmHr9A0mBEWXGZPQ iat-mode=0
 Bridge obfs4 109.202.219.164:47111 8EBD640CBC81B1AFB1E41921D376505C29E57A06 cert=nucr4/4B1W2UfTQK5bX/dqAKRcRD6UuEjvLNxlblk52owLbZNgSP0RTi869BdYPg5dzyLQ iat-mode=0
 EOF
+
+else
+    echo "Invalid option!"
+    exit 1
+fi
 
 tor -f torrc.hamid | while read line; do
     if echo "$line" | grep -q "Bootstrapped"; then
