@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-ORANGE="\033[1;33m"
+ORANGE="\033[38;5;208m"
 GREEN="\033[1;32m"
 RESET="\033[0m"
 
