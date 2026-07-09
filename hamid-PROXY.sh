@@ -8,6 +8,9 @@ echo "1) hamid1"
 echo "2) hamid2"
 read -p "Enter option number: " CHOICE
 
+# Check if obfs4proxy exists
+OBFS4_PATH=$(which obfs4proxy 2>/dev/null)
+
 if [ "$CHOICE" = "1" ]; then
 
 cat > torrc.hamid <<EOF
@@ -41,9 +44,16 @@ EOF
 
 elif [ "$CHOICE" = "2" ]; then
 
+if [ -z "$OBFS4_PATH" ]; then
+    echo "ERROR: obfs4proxy is NOT installed!"
+    echo "Install it with: pkg install obfs4proxy"
+    exit 1
+fi
+
 cat > torrc.hamid <<EOF
 SocksPort 1080
 UseBridges 1
+ClientTransportPlugin obfs4 exec $OBFS4_PATH
 
 Bridge obfs4 185.177.207.10:56389 6B84EEA5CE85F8CA28102B0134851F0928921EC2 cert=p9L6+25s8bnfkye1ZxFeAE4mAGY7DH4Gaj7dxngIIzP9BtqrHHwZXdjMK0RVIQ34C7aqZw iat-mode=2
 Bridge obfs4 129.152.27.111:8443 D7D36B82E37D7B6D87C0F1B41CB87378D405BA88 cert=xarwH/CBVJdudEdjvdgVoza4CmEFz1woouIFZCx23grLVHxDmLLJtZxHkinoI7IvYXyKOw iat-mode=0
@@ -56,7 +66,7 @@ else
     exit 1
 fi
 
-echo "Connecting… please wait (obfs4 may take longer)"
+echo "Connecting… please wait (obfs4 may take 20–40 seconds)"
 
 tor -f torrc.hamid | while read line; do
     if echo "$line" | grep -q "Bootstrapped"; then
