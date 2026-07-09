@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+ORANGE="\033[1;33m"
 GREEN="\033[1;32m"
 RESET="\033[0m"
 
-echo "Select connection mode:"
-echo "1) hamid1"
-echo "2) hamid2"
+echo -e "${ORANGE}1) hamid1${RESET}"
+echo -e "${GREEN}2) hamid2${RESET}"
 read -p "Enter option number: " CHOICE
 
-# Check if obfs4proxy exists
+# Check obfs4proxy
 OBFS4_PATH=$(which obfs4proxy 2>/dev/null)
 
 if [ "$CHOICE" = "1" ]; then
